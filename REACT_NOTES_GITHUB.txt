@@ -1,0 +1,96 @@
+REACT NOTLAR 
+THE NET NINJA UDEMY COURSE
+CODE EXPLAINED
+NOTLAR
+
+başlangıç kısmı kodları
+
+=====================
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- react CDN -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <!-- babel CDN  
+    https://babeljs.io/setup#installation
+örnek kodun içindeki cdn kısmı
+-->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>my website</h1>
+
+    <div id="banner"></div>
+    <footer>
+      <p>footer</p>
+    </footer>
+
+    <!-- react kodlarının her tarafta çalışabilmesi için babel ile eski js kodlarına dönüştürülmesi lazım -->
+    <script type="text/babel">
+      const Banner = () => {
+        const title = "hoşgeldin";
+        const subTitle = "bu da ikinci başlık";
+        const address = "https://kbeler.vercel.app/";
+
+        // func tanımlama
+        const handleClick = (e) => {
+          console.log("you clicked me!");
+          console.log("the site title is : ", title);
+          console.log(e);
+        };
+
+        return (
+          <div>
+            <p>banner</p>
+            <h1>{title.toUpperCase()}</h1>
+            <p>{subTitle}</p>
+            <p>today's date : {new Date().toDateString()}</p>
+            <p>random number : {Math.random() * 100}</p>
+            <a href={address}>web sitem</a>
+            <button onClick={handleClick}>click me</button>
+            <button
+              onClick={(e) => {
+                console.log("bu inline func");
+                console.log(e);
+              }}
+            >
+              inline func
+            </button>
+          </div>
+        );
+      };
+
+      // render componenti ekrana basalım
+      ReactDOM.render(<Banner />, document.getElementById("banner"));
+    </script>
+  </body>
+</html>
+
+=================
+
+##################       REACT kurulum
+
+npx create-react-app my-app
+cd my-app
+npm start
+
+veya yarn start
+
+klasör yapısı, public, src
+App.css app ile ilgili daha çok, App.js comp import edilir,
+index.css ise daha çok global
+şimdilik kullanmayacağımız dosyaları kaldıralım,
+önemli dosyalar
+index.js react'ın başladığı dosya, burada index.html'deki id="root" a yollar uygulamayı/siteyi vs. bunlarda App.js içerisinde olur, o da ana comp zaten, 
+her component export edilmeli ve kullanacağımız yerde import edilmeli
