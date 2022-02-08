@@ -94,3 +94,126 @@ index.css ise daha çok global
 önemli dosyalar
 index.js react'ın başladığı dosya, burada index.html'deki id="root" a yollar uygulamayı/siteyi vs. bunlarda App.js içerisinde olur, o da ana comp zaten, 
 her component export edilmeli ve kullanacağımız yerde import edilmeli
+
+
+##################          STATE
+
+state :  bir componente ait değişebilecek data
+mesela bir todo listte todos yapılacak işler bir state, 
+mesela boolean bilgiside state olabilir, 
+
+* şimdi aşağıdaki gibi kodumuz var, butona bastığımızda console da isim değişir ancak ekranda değişmez,
+------------------------------------------
+import "./App.css";
+
+function App() {
+  let name = "ronaldo";
+
+  const handleClick = () => {
+    name = "messi";
+    console.log(name);
+  };
+
+
+  
+  return (
+    <div className="App">
+      <h1>my name is {name}</h1>
+      <button onClick={handleClick}>change name</button>
+    </div>
+  );
+}
+
+export default App;
+----------------------------------------------
+
+bu yapabilmek için useState hook kullanmalıyız, react'tan useState import > 
+
+______________________
+import "./App.css";
+import { useState } from "react";
+
+function App() {
+  // let name = "ronaldo";
+  const [name, setName] = useState("mario");
+
+  const handleClick = () => {
+    // name = "messi";
+    setName("messi");
+    console.log(name);
+  };
+
+  return (
+    <div className="App">
+      <h1>my name is {name}</h1>
+      <button onClick={handleClick}>change name</button>
+    </div>
+  );
+}
+
+export default App;
+
+--------------------------------
+
+bu sefer ekranı değiştirdi ancak console önceki name'de kaldı, yani ekran mssi oldu ama console daki name ronaldo kaldı
+useState kullanımına dikkat, 
+bununla ilgili
+https://devnot.com/2018/react-hooks-nedir-ve-nasil-kullanilir/
+
+__________________________________
+
+aşağıdaki kodda tek bir comp içinde state kullanımı, conditional gösterim, filter kullanımı var
+-----------------------------------
+
+import "./App.css";
+import { useState } from "react";
+
+function App() {
+  const [showEvents, setShowEvents] = useState(true);
+  const [events, setEvents] = useState([
+    { title: "marios's birthday", id: 1 },
+    { title: "bowser's live stream", id: 2 },
+    { title: "race on farm", id: 3 },
+  ]);
+
+  console.log(showEvents);
+
+  const handleClick = (id) => {
+    setEvents((prevEvents) => {
+      return prevEvents.filter((event) => {
+        return id !== event.id;
+      });
+    });
+    console.log(id);
+  };
+
+  return (
+    <div className="App">
+      {showEvents && (
+        <div>
+          <button onClick={() => setShowEvents(false)}>hide events</button>
+        </div>
+      )}
+
+      {!showEvents && (
+        <div>
+          <button onClick={() => setShowEvents(true)}>show events</button>
+        </div>
+      )}
+
+      {showEvents &&
+        events.map((event, index) => (
+          <div key={event.id}>
+            <h2>
+              {index} - {event.title}
+            </h2>
+            <button onClick={() => handleClick(event.id)}>delete event</button>
+          </div>
+        ))}
+    </div>
+  );
+}
+
+export default App;
+
+-----------------------------------------
