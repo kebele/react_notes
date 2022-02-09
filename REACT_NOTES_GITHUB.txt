@@ -217,3 +217,72 @@ function App() {
 export default App;
 
 -----------------------------------------
+
+COMPONENTS & PROPS
+
+App bizim root componentimiz, bütün comp lar buna bağlanır,
+src>components>Title.js yap büyük harfe dikkat, bu comp hazırlayıp App.js de kullan
+App dan Title'a prop mesela başlık App'dan gitsin başlık metni, 
+
+<Title title="yeni başlık" /> şeklinde App.js den yolladık, bunu Title.js'de yakalamalıyız,
+bunda da 
+export default function Title(props) {
+  return (
+    <div>   
+      <h1 className="title">{props.title}</h1>
+      <br />
+      <h2 className="subtitle">all the latest events in marion kingdom</h2>
+    </div>
+  );
+}
+
+Title.js de props olarak değilde gelen prop ları kendi ismmleriyle kullanmak istiyorsak, 
+export default function Title({ title, subtitle }) {
+    kullanırkende props.title değil sadece title şeklinde kullanırız
+
+bu şekilde Title.js comp'u reusable oldu, kullandığımız yerde ana comptan başlık bilgisi Title.js e gidecek,
+
+src>components>Modal.js 
+hızlı comp oluşturmak için _rfc mesela dosya adıyla func bazlı comp oluşturur,
+Modal.js ve Modal.css oluştur > şimdi bu modalda h2 ve p var burası için bilgileri yine props ile gönderebiliriz ve bu modal ı reusable yapabiliriz, ama mesela göndermek istediğimi bilgilier string, text veya böyle basit şeyler değilde daha karmaşık şeyler olabilir resim, başka comp vb gibi,  
+Modal.js içindeki h2 ve p kes > App.js deki <Modal>h2 ve p</Modal> şekline getir > Modal.js ye props gelecek gibi func. parametre gir ve template içine de {props.children} yap veya 
+export default function Modal({children}) yapıp template içindeki props ları kaldırabilirsin de
+
+import "./Modal.css";
+
+export default function Modal(props) {
+  return (
+    <div className="modal-backdrop">
+      <div className="modal">       
+        {props.children}
+      </div>
+    </div>
+  );
+}
+
+prop olarak func yollayalım, modal ı kapatmak için Modal.js e bir buton yapalım, App.js de const [showModal,setShowModal] = useState(true) hazırlayalım, const handleClose = () => {
+    setShowModal(false)
+}
+hazırlayalım ve bu func u prop olarak Modal.js e yollayalım,    
+<Modal handleClose={handleClose}>
+Modal.js de de destructuring ile alalım                
+export default function Modal({ children, handleClose }) {
+    kullanırken de 
+       <button onClick={handleClose}>close</button>
+
+Portal
+react id="root" da render edilir, portal bu root un dışında bir child elde edebilmemizi sağlar
+mesela Modal.js i portal ile bu hale getirelim, 
+Modal.js e bak, ReactDOM import ettik, return de ReactDOM.createPortal(....., document.body)
+dedik yani normalde id="root" da oluşurken bütün app bizim modal root'da değil body de oluşsun dedik, bunu inspect ile de görebiliriz, burada dikkat ediecek konu style konularında artık modal root ile bağlantısı kesildiğinde root a bağlı style lardan etkilenmez, 
+
+src>components>EventList.js yap > bunun içinde bir event list olsun > 
+
+
+burada da todo listesinin kendisini ayrı bir comp yapalım, EventList.js oluşturup _rfc ile func bazlı bir comp olacak, App.js de componentin kendisi olacak kısmı yani events.map...... kısmını alıp EventList.js ya koyalım, burada iki prop olacak biri events array'i, diğeri handleClick func. ikisinide props olarak yollayacağız, ayrıca ReactFragment kullandığımız için comp' a react ı import edeceğiz > App.js de de comp'u showEvents yanında kullanacağız aşağıda
+
+ {showEvents && <EventList events={events} handleClick={handleClick} />}
+
+
+
+---------------------
