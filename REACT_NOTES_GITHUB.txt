@@ -286,3 +286,100 @@ burada da todo listesinin kendisini ayrı bir comp yapalım, EventList.js oluşt
 
 
 ---------------------
+
+STYLING
+
+----------------------
+
+farklı css dosyaları olsa da mesela Modal.css gibi bunlar render da sayfada sıralanırlar ve aynı clss isimleri veya style işlemlerinde birbirlerinden etkilenirler bu yüzden bloklama yapmalıyız, mesela bir style ın sadece mesela MOdal.js içinde geçerli olmasını istiyorsak Modal.js de ana div'e modal-block (mesela) class'ı verip css de bunu kullanırken .modal-block ön sınıfı ile birlikte kullanmalıyız, 
+
+ inline css kullanımı
+
+       style={{
+          border: "4px solid",
+          borderColor: "#ff4500",
+          textAlign: "center",
+        }}
+
+dynamic inline style; App.js den Modal.js ye isSalesModal prop olarak true veya false yollayalım borderColor'da da js ternary şeklinde yazalım, koda bak, 
+
+conditional classes;
+modal daki close buttona conditional class ekleyelim 
+<button onClick={handleClose} className={isSalesModal ? "sales-btn" : ""}>close</button>
+
+
+css modules
+
+yukarıda yaptığımız css block işlemlerini bir çeşit otomatik yapan
+
+EventList.js de yapalım, EventList.module.css oluştur > içine EventList.js de kullanmak istediğimiz style yaz > ve EventLİst.js ye import
+import styles from "./EventList.module.css"
+buradaki import biraz daha farklı,
+diğer konu biz bunu fragment olarak yapmıştık fragment dom un dışındaydı bunu önce normal dive çevirelim,  
+<div className={styles.card} key={event.id}>
+
+----------------------
+
+Forms - inputs - labels
+
+-------------------------
+
+şimdi hazırda çalışan modal ımızı değiştirip new event şeklinde event ekleme yapalım, 
+
+NewEventForm.js ve NewEventForm.css yap, formun içini hazorlayıp normalde modal olan yere NewEventFom u comp olarak ekle, importunuda yap, zaten Modal da açma kapatma vs yapmıştım şimdi ismi değiştirdik devam
+
+onChange event 
+
+bir şeyler değiştğinde ne olacağını...
+bunları input içine func olarak hazırlayalım, state lerini de hazırlayalım, onChange ile bu state leri değiştirielim
+
+şimdi birde resetForm yapalım, tıklayınca state leri boşaltısın, deneyelim, stateleri boşalttı ancak input alanında yazılı/seçili olanlar kaldı, bunu değiştirmek için inputların value attribute ınada state leri atayacağız, böylelikle .....
+        <input
+          type="date"
+          onChange={(e) => setDate(e.target.value)}
+          value={date}
+        />
+state değiştiğinde value'da değişecek
+
+onSubmit event
+
+submit yapmak için, burada stateleri alıp bir yere koyacak, burada form u submit edeceğinden onSubmit form a koyulacak, 
+<form className="new-event-form" onSubmit={handleSubmit}>
+bunu tetikleyen submit butonuna basılması olacak
+şimdi submite bastığımızda handleSubmit içinde yeni bir event nesnesi oluşacak ve bunun içinde title, date ve id bilgisi olacak, title ve date i state den alacak ancak id için math.random() kullanabiliriz veya dışarıdan id atayan bir pakette kullanabiliriz, deneyelim başarılı, event objectimiz console a geliyor şimdi bunu eventList e kaydedelim, koda bak 
+
+bu oluşturuğumuz event i App.js'deki events e yollayalım, burada event i kaydeden setEvents App.js 'de addEvent func oluştur > 
+
+  const addEvent = (event) => {
+    setEvents((prevEvents) => {
+      return [...prevEvents, event];
+    });
+  };
+
+  bunuda NewEventForm.js 'ye yollayalım, çünkü oradan tetiklenecek, NewEventFom dan bunu props olarak destructuring şeklinde alıp handleSubmit içine koyacağız, parametre olarakta hazırladığımız event'i alacak, ayrıca vent i submit ettikten sonra modal kapansın, bunuda addEvent e ekleyelim, 
+
+  close button u state i gösteren p yi falana temizleyelim, başarılı, herşey çalışıyor
+
+  şimdi her sayfayı yenilediğimizde app yeniden çalışıyor ve events array'i boş old. için bizim eklediklerimiz gidiyor, bunu yapalım, 
+
+  useRef
+
+  useRef, dom elemanına ya da react render metodu içerisinde oluşturulan ögelere erişmeye imkan tanır, 
+
+  NewEventForm.js deki state ve ilgili kısımlarını kaldıralım, useRef import, 
+    const title = useRef(); aynı şekilde date tanımlayalım ve template de iligli yerlere
+    ref={title} ref={date}
+    bunları console'a aldığımızda iki objectimiz olur, şimdi HandleSubmit içindeki eventimizi dzenleyelim, artık ref ile bağladığımız değerler
+    title: title.current.value,
+    şeklinde ifade edeceğiz, resetForm un içinide buna göre düzenleyeceğiz,
+
+    bazı durumlarda ref bazende state kullanılır, kimisi onu kimisi onu kullanır gibi, hoca state terch ediyor, 
+
+    select boxes ekleyelim, ve sonrada bütün event object indeki bilgileri de event lere ekleyelim, 
+
+
+-------------------
+
+fetch data & useEffect
+
+---------------------
